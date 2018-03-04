@@ -59,7 +59,7 @@ namespace Eco.Mods.TechTree
 
                     if (destination != null)
                     {
-                        string destext = destination.GetComponent<CustomTextComponent>().Text;
+                        string destext = destination.GetComponent<CustomTextComponent>().Text.ToLower();
                         if (destext == null || !destext.Contains("lift"))
                             continue;
 
