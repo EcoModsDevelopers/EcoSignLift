@@ -59,8 +59,8 @@ namespace Eco.Mods.TechTree
 
                     if (destination != null)
                     {
-                        string destext = destination.GetComponent<CustomTextComponent>().Text.ToLower();
-                        if (destext == null || !destext.Contains("lift"))
+                        string destext = destination.GetComponent<CustomTextComponent>().Text;
+                        if (destext == null || !destext.ToLower().Contains("lift"))
                             continue;
 
                         Vector3 ppos = pPlayer.Position;
