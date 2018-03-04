@@ -17,6 +17,14 @@ namespace Eco.Mods.TechTree
     [RequireComponent(typeof(CustomTextComponent))]
     public partial class WoodSignObject : WorldObject
     {
+
+        /***************************** Configuration *******************************/
+
+        private const bool NEEDS_ITEM_NEXT_TO_SIGN = false;     //use true or false
+        private const string NAME_OF_BLOCK = "FlatSteel";       //Every blockname that contains FlatStell will be ok. So FlatSteelFloorBlock, FlatSteelWallBlock, etc will work
+
+        /***************************************************************************/
+
         private const int MAX_HEIGHT = 10000;
 
         protected override void PostInitialize()
@@ -45,7 +53,15 @@ namespace Eco.Mods.TechTree
 
         private void FindDestinationSignAndTeleport(Player pPlayer, Vector3i pDirection)
         {
-            Vector3i pos = Position3i + (pDirection * 2);
+            Vector3i pos = Position3i;
+
+            if (!hasNeightborIfNeeded(pos))
+            {
+                pPlayer.SendTemporaryError("The sign lift only works if there is a " + NAME_OF_BLOCK + " next to it.");
+                return;
+            }
+
+            pos += pDirection * 2;
 
             while (pos.Y > 0 && pos.Y < MAX_HEIGHT)
             {
@@ -75,7 +91,7 @@ namespace Eco.Mods.TechTree
 
                         foreach (var neightbor in destvec.XZNeighbors)
                             if (RouteManager.WorldBlockIsWalkable(neightbor))
-                            {                               
+                            {
                                 pPlayer.SetPosition(neightbor);
                                 return;
                             }
@@ -87,6 +103,18 @@ namespace Eco.Mods.TechTree
             }
 
             pPlayer.SendTemporaryError("No destination found!");
+        }
+
+        private bool hasNeightborIfNeeded(Vector3i pPosition)
+        {
+            if (!NEEDS_ITEM_NEXT_TO_SIGN)
+                return true;
+
+            foreach (var neightbor in pPosition.Full26Neighbors)
+                if (Eco.World.World.GetBlock(neightbor).GetType().Name.Contains(NAME_OF_BLOCK))
+                    return true;
+
+            return false;
         }
     }
 
