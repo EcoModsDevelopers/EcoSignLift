@@ -20,7 +20,7 @@ namespace EcoSignLift
             if (evt.Context.Method != InteractionMethod.Left && evt.Context.Method != InteractionMethod.Right)
                 return;
 
-            if (evt.Context.Target == null || !(evt.Context.Target.GetType().ToString().Contains(SIGN_IDENTIFIER)))
+            if (evt.Context.Player == null || evt.Context.Target == null || !(evt.Context.Target.GetType().ToString().Contains(SIGN_IDENTIFIER)))
                 return;
 
             WorldObject sign = evt.Context.Target as WorldObject;
